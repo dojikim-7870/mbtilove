@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MBTImatch - 탭형 MBTI 궁합</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #d2f8f7 0%, #ffd5c2 100%);
+      min-height: 100vh;
+      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80');
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      background-size: cover;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(210, 245, 243, 0.6);
+      backdrop-filter: blur(12px);
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen text-[#1b3a4b]">
+
+  <!-- Header -->
+  <header class="bg-white bg-opacity-80 backdrop-blur-md shadow sticky top-0 z-50">
+    <div class="container mx-auto max-w-3xl px-6 py-4 flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold tracking-tight">MBTImatch</h1>
+      <div class="space-x-6">
+        <a href="#" class="text-sm font-medium text-[#f97316] hover:underline">회원가입</a>
+        <a href="#" class="text-sm font-medium text-[#f97316] hover:underline">로그인</a>
+      </div>
+    </div>
+    <nav class="bg-[#e6f0f4]">
+      <div class="container mx-auto max-w-3xl px-6 py-2 flex justify-center space-x-10 text-sm font-semibold">
+        <button data-tab="compat" class="tab-btn text-[#1b3a4b] hover:text-[#f97316] focus:outline-none">궁합</button>
+        <button data-tab="love" class="tab-btn text-[#1b3a4b] hover:text-[#f97316] focus:outline-none">연애스타일</button>
+        <button data-tab="chat" class="tab-btn text-[#1b3a4b] hover:text-[#f97316] focus:outline-none">대화성향</button>
+        <button data-tab="ideal" class="tab-btn text-[#1b3a4b] hover:text-[#f97316] focus:outline-none">이상형</button>
+        <button data-tab="celebs" class="tab-btn text-[#1b3a4b] hover:text-[#f97316] focus:outline-none">유명인MBTI</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow container mx-auto max-w-xl px-6 py-10 space-y-10 bg-white bg-opacity-80 rounded-xl shadow-md mt-8 mb-16">
+
+    <section id="compat" class="tab-content">
+      <h2 class="text-2xl font-bold mb-3">MBTI 궁합 테스트</h2>
+      <p class="mb-5 text-[#2c3e50]">당신과 상대방의 MBTI를 선택하여 궁합을 확인하세요.</p>
+      <div class="flex flex-col sm:flex-row gap-4 mb-4">
+        <select id="yourMbti" class="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f97316]">
+          <option value="">내 MBTI</option>
+          <option value="INFP">INFP</option>
+          <option value="ENFP">ENFP</option>
+          <option value="INFJ">INFJ</option>
+          <option value="ENFJ">ENFJ</option>
+        </select>
+        <select id="partnerMbti" class="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f97316]">
+          <option value="">상대 MBTI</option>
+          <option value="INFP">INFP</option>
+          <option value="ENFP">ENFP</option>
+          <option value="INFJ">INFJ</option>
+          <option value="ENFJ">ENFJ</option>
+        </select>
+        <button onclick="showResult()" class="bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold rounded px-6 py-2 transition">궁합 보기</button>
+      </div>
+      <div id="result" class="text-[#065f46] font-semibold text-lg min-h-[2rem]"></div>
+      <p class="mt-5">MBTI를 모르시나요? <button id="openModal" class="text-[#2563eb] underline hover:text-[#1d4ed8]">간단히 확인하기</button></p>
+    </section>
+
+    <section id="love" class="hidden tab-content">
+      <h3 class="text-xl font-semibold mb-2">MBTI별 연애스타일</h3>
+      <p class="text-[#344e41]">ENFP: 열정적이고 자발적입니다.<br>INTJ: 전략적이며 신중한 타입입니다.</p>
+    </section>
+
+    <section id="chat" class="hidden tab-content">
+      <h3 class="text-xl font-semibold mb-2">대화/갈등 스타일</h3>
+      <p class="text-[#344e41]">INFP는 감정 중심, ESTJ는 논리 중심의 갈등 해결을 선호합니다.</p>
+    </section>
+
+    <section id="ideal" class="hidden tab-content">
+      <h3 class="text-xl font-semibold mb-2">MBTI 이상형 월드컵</h3>
+      <p class="text-[#344e41]">각 MBTI별 이상형을 골라보세요! (추후 인터랙티브 구현)</p>
+    </section>
+
+    <section id="celebs" class="hidden tab-content">
+      <h3 class="text-xl font-semibold mb-2">유명인 MBTI</h3>
+      <p class="text-[#344e41]">BTS RM - INFJ, Elon Musk - INTJ</p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white bg-opacity-90 backdrop-blur-md shadow-inner py-6 text-center text-sm text-[#1b3a4b]">
+    <div class="space-x-6 mb-2">
+      <a href="#" id="openPrivacy" class="hover:underline cursor-pointer">개인정보처리방침</a>
+      <a href="#" id="openTerms" class="hover:underline cursor-pointer">이용약관</a>
+      <a href="#" id="openContact" class="hover:underline cursor-pointer">문의하기</a>
+    </div>
+    <p class="text-xs text-[#3f5766]">
+      이 사이트는 MBTI 기반의 비공식 테스트이며, 실제 성격과 완전히 일치하지 않을 수 있습니다.
+    </p>
+    <p class="text-xs mt-1 text-[#3f5766]">© 2025 MBTImatch</p>
+  </footer>
+
+  <!-- 좌측 하단 모달박스 스타일 -->
+  <div id="mbtiModal" class="fixed bottom-6 left-6 bg-white rounded-lg p-6 max-w-md w-80 shadow-lg z-50 hidden border border-gray-300">
+    <button id="closeModal" class="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-gray-900">&times;</button>
+    <h3 class="text-lg font-bold mb-4">MBTI를 아직 모르시나요?</h3>
+    <p class="mb-6">신뢰도 높은 외부 테스트 사이트를 안내해드립니다.<br>결과를 확인 후 돌아와 입력해 주세요.</p>
+    <a href="https://www.16personalities.com/ko" target="_blank" class="inline-block bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded px-5 py-2 transition">
+      → MBTI 테스트 하러 가기
+    </a>
+  </div>
+
+  <!-- 개인정보처리방침 모달 -->
+  <div id="privacyModal" class="fixed bottom-6 left-6 bg-white rounded-lg p-6 max-w-md w-80 shadow-lg z-50 hidden border border-gray-300 max-h-[80vh] overflow-auto">
+    <button id="closePrivacy" class="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-gray-900">&times;</button>
+    <h3 class="text-lg font-bold mb-4">개인정보처리방침</h3>
+    <p>여기에 개인정보처리방침 내용을 넣으세요...</p>
+  </div>
+
+  <!-- 이용약관 모달 -->
+  <div id="termsModal" class="fixed bottom-6 left-6 bg-white rounded-lg p-6 max-w-md w-80 shadow-lg z-50 hidden border border-gray-300 max-h-[80vh] overflow-auto">
+    <button id="closeTerms" class="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-gray-900">&times;</button>
+    <h3 class="text-lg font-bold mb-4">이용약관</h3>
+    <p>여기에 이용약관 내용을 넣으세요...</p>
+  </div>
+
+  <!-- 문의하기 모달 -->
+  <div id="contactModal" class="fixed bottom-6 left-6 bg-white rounded-lg p-6 max-w-md w-80 shadow-lg z-50 hidden border border-gray-300 max-h-[80vh] overflow-auto">
+    <button id="closeContact" class="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-gray-900">&times;</button>
+    <h3 class="text-lg font-bold mb-4">문의하기</h3>
+    <p>문의 내용이나 연락처 정보를 여기에 넣으세요.</p>
+  </div>
+
+  <script>
+    // 탭 메뉴 클릭 시 활성화된 콘텐츠만 표시
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // 모든 콘텐츠 숨기기
+        contents.forEach(c => c.classList.add('hidden'));
+        // 선택된 탭 콘텐츠 보이기
+        const target = document.getElementById(tab.getAttribute('data-tab'));
+        if (target) target.classList.remove('hidden');
+
+        // 탭 활성화 스타일 (선택 시 색상 변경)
+        tabs.forEach(t => t.classList.remove('text-[#f97316]'));
+        tab.classList.add('text-[#f97316]');
+      });
+    });
+
+    // 첫번째 탭 기본 활성화
+    tabs[0].classList.add('text-[#f97316]');
+    contents.forEach((c, i) => {
+      if(i !== 0) c.classList.add('hidden');
+    });
+
+    function showResult() {
+      const mbti1 = document.getElementById('yourMbti').value;
+      const mbti2 = document.getElementById('partnerMbti').value;
+      const result = document.getElementById('result');
+      if (!mbti1 || !mbti2) {
+        result.textContent = '양쪽 MBTI를 모두 선택해 주세요.';
+        return;
+      }
+      if (mbti1 === mbti2) {
+        result.textContent = `${mbti1}와 ${mbti2}는 매우 잘 맞는 궁합입니다!`;
+      } else {
+        result.textContent = `${mbti1}와 ${mbti2}의 궁합은 약 85%로, 좋은 관계를 기대할 수 있습니다.`;
+      }
+    }
+
+    // 모달 열기/닫기 함수 모음
+    const modalMappings = [
+      {btnId: 'openModal', modalId: 'mbtiModal', closeId: 'closeModal'},
+      {btnId: 'openPrivacy', modalId: 'privacyModal', closeId: 'closePrivacy'},
+      {btnId: 'openTerms', modalId: 'termsModal', closeId: 'closeTerms'},
+      {btnId: 'openContact', modalId: 'contactModal', closeId: 'closeContact'},
+    ];
+
+    modalMappings.forEach(({btnId, modalId, closeId}) => {
+      const btn = document.getElementById(btnId);
+      const modal = document.getElementById(modalId);
+      const closeBtn = document.getElementById(closeId);
+      if(btn && modal && closeBtn) {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          modal.classList.remove('hidden');
+        });
+        closeBtn.addEventListener('click', () => {
+          modal.classList.add('hidden');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
